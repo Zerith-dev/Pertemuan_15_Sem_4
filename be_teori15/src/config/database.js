@@ -11,34 +11,25 @@ const isProduction = process.env.NODE_ENV === "production";
 let sequelize;
 
 if (isProduction && process.env.DB_HOST) {
-  // MySQL for production
-  try {
-    sequelize = new Sequelize({
-      dialect: "mysql",
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT || "3306"),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      logging: false,
-      pool: {
-        max: 3,
-        min: 1,
-        acquire: 30000,
-        idle: 10000
-      },
-      dialectOptions: {
-        connectTimeout: 10000,
-        waitForConnections: true,
-        enableKeepAlive: true,
-        keepAliveInitialDelaySeconds: 0
-      }
-    });
-    console.log("✓ Sequelize configured for MySQL production");
-  } catch (err) {
-    console.error("Error creating Sequelize instance:", err.message);
-    throw err;
-  }
+  // MySQL for production - SIMPLE CONFIG
+  sequelize = new Sequelize({
+    dialect: "mysql",
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT || "3306"),
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    logging: false,
+    pool: {
+      max: 3,
+      min: 1,
+      acquire: 30000,
+      idle: 10000
+    }
+  });
+  console.log("✓ Sequelize configured for MySQL production");
+  console.log(`  Host: ${process.env.DB_HOST}`);
+  console.log(`  Database: ${process.env.DB_NAME}`);
 } else {
   // SQLite for development
   const dbPath = path.join(__dirname, "../../data/database.sqlite");
