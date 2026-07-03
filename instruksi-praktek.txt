@@ -1,0 +1,46 @@
+# Tugas Deployment Aplikasi Full Stack
+
+Lakukan proses deployment aplikasi sesuai dengan ketentuan berikut.
+
+1. Manajemen Environment Variable
+
+- Seluruh data yang bersifat sensitif, seperti kredensial database, API Key, Secret Key, Token, dan konfigurasi penting lainnya, tidak boleh ditulis secara langsung (hardcode) di dalam source code.
+- Seluruh konfigurasi tersebut harus disimpan menggunakan Environment Variables pada platform deployment yang digunakan.
+
+2. Deployment Backend
+
+- Deploy aplikasi `be_teori15` ke platform Railway.
+- Pastikan backend dapat berjalan dengan baik dan dapat diakses melalui URL publik yang disediakan Railway.
+- Konfigurasikan seluruh Environment Variables yang dibutuhkan agar aplikasi dapat terhubung dengan database.
+- Gunakan file `table.sql` untuk melakukan konfigurasi database dengan cepat.
+
+3. Deployment Frontend
+
+- Deploy aplikasi `fe_teori15` ke platform Vercel.
+- Konfigurasikan Environment Variables yang diperlukan, seperti URL API backend.
+- Pastikan frontend dapat berkomunikasi dengan backend yang telah dideploy di Railway.
+
+4. Verifikasi Deployment
+
+Setelah seluruh proses deployment selesai, lakukan pengujian untuk memastikan bahwa:
+
+- Backend dapat diakses melalui URL publik.
+- Frontend dapat diakses melalui URL publik.
+- Frontend dan backend dapat saling berkomunikasi dengan baik.
+- Seluruh fitur aplikasi dapat berjalan tanpa error.
+
+5. Pengumpulan
+
+Sertakan informasi berikut pada hasil pengumpulan:
+
+- URL aplikasi frontend (Vercel).
+- URL aplikasi backend (Railway).
+- Informasi database Railway (hostname, port, dan nama database; tidak perlu mencantumkan username maupun password).
+- Screenshot dashboard Railway dan Vercel sebagai bukti bahwa aplikasi telah berhasil dideploy.
+
+Catatan:
+
+- Pastikan aplikasi berjalan pada lingkungan produksi (production environment).
+- Jangan mengunggah file `.env` ke repository GitHub.
+- Pastikan repository tidak mengandung informasi sensitif seperti password database, API Key, maupun Secret Key.
+- Pastikan repository GitHub yang dikumpulkan bersifat **public** sehingga dapat diakses untuk proses penilaian.
