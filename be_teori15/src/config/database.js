@@ -11,28 +11,34 @@ const isProduction = process.env.NODE_ENV === "production";
 let sequelize;
 
 if (isProduction && process.env.DB_HOST) {
-  // MySQL for production with connection pooling
-  sequelize = new Sequelize(
-    process.env.DB_NAME || "railway",
-    process.env.DB_USER || "root",
-    process.env.DB_PASSWORD || "",
-    {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT || 3306,
+  // MySQL for production
+  try {
+    sequelize = new Sequelize({
       dialect: "mysql",
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || "3306"),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       logging: false,
       pool: {
-        max: 5,
-        min: 0,
+        max: 3,
+        min: 1,
         acquire: 30000,
         idle: 10000
       },
       dialectOptions: {
         connectTimeout: 10000,
-        decimalNumbers: true
+        waitForConnections: true,
+        enableKeepAlive: true,
+        keepAliveInitialDelaySeconds: 0
       }
-    }
-  );
+    });
+    console.log("✓ Sequelize configured for MySQL production");
+  } catch (err) {
+    console.error("Error creating Sequelize instance:", err.message);
+    throw err;
+  }
 } else {
   // SQLite for development
   const dbPath = path.join(__dirname, "../../data/database.sqlite");
@@ -41,6 +47,7 @@ if (isProduction && process.env.DB_HOST) {
     storage: dbPath,
     logging: false,
   });
+  console.log("✓ Sequelize configured for SQLite development");
 }
 
 export default sequelize;

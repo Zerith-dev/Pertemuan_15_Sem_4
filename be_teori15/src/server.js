@@ -4,28 +4,35 @@ import sequelize from "./config/database.js";
 
 const PORT = process.env.PORT || 3000;
 
-let dbInitialized = false;
+// Start server immediately
+const server = app.listen(PORT, () => {
+  console.log(`✓ Server berjalan di port ${PORT}`);
+  console.log(`✓ API URL: http://localhost:${PORT}/api/todos`);
+  console.log(`✓ NODE_ENV: ${process.env.NODE_ENV}`);
+});
 
-const initializeDB = async () => {
-  if (dbInitialized) return;
-  
+// Try to connect database in background (non-blocking)
+(async () => {
   try {
+    console.log("🔄 Attempting database connection...");
     await sequelize.authenticate();
-    console.log("Database connected successfully");
+    console.log("✓ Database connected successfully");
+    
     await sequelize.sync();
-    console.log("Database synced successfully");
-    dbInitialized = true;
+    console.log("✓ Database synced successfully");
   } catch (error) {
-    console.error("Database error:", error.message);
-    console.log("Server running without database. Please check MySQL credentials in .env file");
-    console.log("Expected format: DB_USER=root, DB_PASSWORD=<your_password>, DB_HOST=localhost, DB_NAME=teori15_db");
+    console.warn("⚠️  Database error:", error.message);
+    console.warn("⚠️  Server running without database connection");
+    console.warn(`Expected: DB_HOST=${process.env.DB_HOST}, DB_USER=${process.env.DB_USER}, DB_NAME=${process.env.DB_NAME}`);
   }
-};
+})();
 
-initializeDB();
-
-app.listen(PORT, () => {
-  console.log(`Server berjalan di port ${PORT}`);
-  console.log(`API URL: http://localhost:${PORT}/api/todos`);
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received, shutting down gracefully");
+  server.close(() => {
+    console.log("Server closed");
+    process.exit(0);
+  });
 });
 
